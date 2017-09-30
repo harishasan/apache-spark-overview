@@ -1,9 +1,10 @@
 # Apache Spark: What? Why? How? But....
+![spark-logo-trademark](https://user-images.githubusercontent.com/1760859/31045086-82ecb952-a5f5-11e7-8208-fd21df1bd409.png)
 
 ## Why a new framework (don't we have MapReduce already)?
 MapReduce requires data to be serialized to disk between each step, which means that the I/O cost of a MapReduce job is high, making interactive analysis and iterative algorithms very expensive.
 
-## (Boring) Overview
+## Overview
 Spark is a general purpose cluster computing framework that provides efficient in-memory computations for large data sets by distributing computation across multiple computers. 
 
 Any distributed computing framework needs to solve two problems
@@ -52,6 +53,10 @@ After the first action(count) involving errors runs, Spark will store the partit
 
 ## (Very Complex) Application Workflow
 Programming Spark applications is similar to other data flow languages that had previously been implemented on Hadoop. Code is written in a driver program which is lazily evaluated, and upon an action, the driver code is distributed across the cluster to be executed by workers on their partitions of the RDD. Results are then sent back to the driver for aggregation or compilation. Essentially the driver program creates one or more RDDs, applies operations to transform the RDD, then invokes some action on the transformed RDD. You can develop applications locally and start Spark jobs that will run in a multi-process/multi-threaded mode, or you can configure your machine as a client to a cluster (though this is not recommended as the driver plays an important role in Spark jobs and should be in the same network as the rest of the cluster).
+
+![driver-sparkcontext-clustermanager-workers-executors](https://user-images.githubusercontent.com/1760859/31045087-8305dfa4-a5f5-11e7-8a7e-b0855b2114d7.png)
+
+Image taken from ![here](https://jaceklaskowski.gitbooks.io/mastering-apache-spark/images/driver-sparkcontext-clustermanager-workers-executors.png)
 
 Spark applications are run as independent sets of processes, coordinated by a SparkContext in a driver program. The context will connect to some cluster manager (e.g. YARN) which allocates system resources. Each worker in the cluster is managed by an executor, which is in turn managed by the SparkContext. The executor manages computation as well as storage and caching on each machine. What is important to note is that application code is sent from the driver to the executors, and the executors specify the context and the various tasks to be run. The executors communicate back and forth with the driver for data sharing or for interaction. **Drivers are key participants in Spark jobs, and therefore, they should be on the same network as the cluster.** This is different from Hadoop code, where you might submit a job from anywhere to the JobTracker, which then handles the execution on the cluster.
 

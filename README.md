@@ -56,7 +56,7 @@ Programming Spark applications is similar to other data flow languages that had 
 
 ![driver-sparkcontext-clustermanager-workers-executors](https://user-images.githubusercontent.com/1760859/31045087-8305dfa4-a5f5-11e7-8a7e-b0855b2114d7.png)
 
-Image taken from ![here](https://jaceklaskowski.gitbooks.io/mastering-apache-spark/images/driver-sparkcontext-clustermanager-workers-executors.png)
+Image taken from: https://jaceklaskowski.gitbooks.io/mastering-apache-spark
 
 Spark applications are run as independent sets of processes, coordinated by a SparkContext in a driver program. The context will connect to some cluster manager (e.g. YARN) which allocates system resources. Each worker in the cluster is managed by an executor, which is in turn managed by the SparkContext. The executor manages computation as well as storage and caching on each machine. What is important to note is that application code is sent from the driver to the executors, and the executors specify the context and the various tasks to be run. The executors communicate back and forth with the driver for data sharing or for interaction. **Drivers are key participants in Spark jobs, and therefore, they should be on the same network as the cluster.** This is different from Hadoop code, where you might submit a job from anywhere to the JobTracker, which then handles the execution on the cluster.
 

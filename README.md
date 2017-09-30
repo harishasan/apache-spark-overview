@@ -103,14 +103,14 @@ lines.count()
 
 Note that the **actual persistence takes place during the first (count) action call on the RDD.**
 
-Spark provides multiple Storage options(Memory/Disk) to persist the data as well as Replication Levels. More information can be found ![here](https://apachesparkbook.blogspot.com/2015/05/rdd-persistence.html). When the cached data exceeds the Memory capacity, Spark automatically evicts the old partitions(it will be recalculated when needed). This is called Last Recently used Cache(LRU) policy.
+Spark provides multiple Storage options(Memory/Disk) to persist the data as well as Replication Levels. More information can be found [here](https://apachesparkbook.blogspot.com/2015/05/rdd-persistence.html). When the cached data exceeds the Memory capacity, Spark automatically evicts the old partitions(it will be recalculated when needed). This is called Last Recently used Cache(LRU) policy.
 
 A couple of use cases for caching or persisting RDDs are the use of iterative algorithms and fast interactive RDD use. If dataset can be accessed many times or more than one times then RDD should be cached so that recomputation can be faster. If you only read a dataset once there is no point in caching it, it will actually make your job slower. There is very small and purely syntactic difference between caching and persistence of RDDs, the two terms are often used interchangeably. Users can also set a persistence priority on each RDD to specify which in-memory data should spill to disk first.
 
 You can use unpersist() to unpersist a RDD.
 
 ## (Not so Useful) Tips
-1. Memory leaks can occur if you are careless in persisting, read more here: https://github.com/ContentWise/sparking/wiki/What-if-you-%22.persist()%22-twice
+1. Memory leaks can occur if you are careless in persisting, read more [here](https://github.com/ContentWise/sparking/wiki/What-if-you-%22.persist()%22-twice)
 
 2. By calling collect() on any RDD, you drag data back into your applications from the nodes. Each RDD element will be copy onto the single driver program, which will run out of memory and crash. Given the fact that you want to make use of Spark in the most efficient way possible, it’s not a good idea to call collect() on large RDDs.
 
@@ -124,9 +124,9 @@ You can use unpersist() to unpersist a RDD.
 
 ## Confession
 When I started learning Apache Spark I read material from various websites and took notes (read copy/paste) along the way. Recently, another team at my company started exploring Spark so I decided to share my notes with them (and the world). Here are some of the notes sources
-1. ![Paper on RDDs, University of California, Berkeley](https://www.usenix.org/system/files/conference/nsdi12/nsdi12-final138.pdf)
-2. ![Apache Spark Homepage](https://spark.apache.org/)
-2. ![Apache Spark in Python: Beginner's Guide, Data Camp](https://www.datacamp.com/community/tutorials/apache-spark-python#gs.iAyDe9M)
-3. ![Getting Started with Spark, in Python - District Data Labs](https://districtdatalabs.silvrback.com/getting-started-with-spark-in-python)
+1. [Paper on RDDs, University of California, Berkeley](https://www.usenix.org/system/files/conference/nsdi12/nsdi12-final138.pdf)
+2. [Apache Spark Homepage](https://spark.apache.org/)
+2. [Apache Spark in Python: Beginner's Guide, Data Camp](https://www.datacamp.com/community/tutorials/apache-spark-python#gs.iAyDe9M)
+3. [Getting Started with Spark, in Python - District Data Labs](https://districtdatalabs.silvrback.com/getting-started-with-spark-in-python)
 4. Stackoverflow
 5. Quora

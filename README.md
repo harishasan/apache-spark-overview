@@ -21,9 +21,9 @@ RDDs are motivated by two types of applications that current computing framework
 
 Although current frameworks provide numerous abstractions for accessing a cluster’s computational resources, they lack abstractions for leveraging distributed memory.
 
-RDDs provide an interface based on coarse grained transformations (e.g. map, filter and join) that apply the same operation to many data items. This allows them to efficiently provide fault tolerance by logging the transformations used to build a dataset (its lineage) rather than the actual data. If a partition of an RDD is lost, the RDD has enough information about how it was derived from other RDDs to recompute just that partition. Thus, lost data can be recovered, often quite quickly, without requiring costly replication. This is a powerful property: in essence, **a program cannot reference an RDD that it cannot reconstruct after a failure**.
-
 RDDs are essentially a programming abstraction that represents a read-only collection of objects that are partitioned across machines. RDDs can be rebuilt from a lineage (and are therefore fault tolerant), are accessed via parallel operations, can be read from and written to distributed storages like HDFS or S3, and most importantly, can be cached in the memory of worker nodes for immediate reuse. Because RDDs can be cached in memory, Spark is extremely effective at iterative applications, where the data is being reused throughout the course of an algorithm. Most machine learning and optimization algorithms are iterative, making Spark an extremely effective tool for data science. Additionally, because Spark is so fast, it can be accessed in an interactive fashion via a command line prompt similar to the Python REPL.
+
+RDDs provide an interface based on coarse grained transformations (e.g. map, filter and join) that apply the same operation to many data items. This allows them to efficiently provide fault tolerance by logging the transformations used to build a dataset (its lineage) rather than the actual data. If a partition of an RDD is lost, the RDD has enough information about how it was derived from other RDDs to recompute just that partition. Thus, lost data can be recovered, often quite quickly, without requiring costly replication. This is a powerful property: in essence, **a program cannot reference an RDD that it cannot reconstruct after a failure**.
 
 RDDs support two types of operations;
 1. Transformations, which create a new RDD from an existing one
@@ -51,7 +51,7 @@ errors.filter(_.contains("HDFS"))
 ```
 After the first action(count) involving errors runs, Spark will store the partitions of errors in memory, greatly speeding up subsequent computations on it. Note that the base RDD, lines, is not loaded into RAM. This is desirable because the error messages might only be a small fraction of the data (small enough to fit into memory).
 
-## (Very Complex) Application Workflow
+## Application Workflow
 Programming Spark applications is similar to other data flow languages that had previously been implemented on Hadoop. Code is written in a driver program which is lazily evaluated, and upon an action, the driver code is distributed across the cluster to be executed by workers on their partitions of the RDD. Results are then sent back to the driver for aggregation or compilation. Essentially the driver program creates one or more RDDs, applies operations to transform the RDD, then invokes some action on the transformed RDD. You can develop applications locally and start Spark jobs that will run in a multi-process/multi-threaded mode, or you can configure your machine as a client to a cluster (though this is not recommended as the driver plays an important role in Spark jobs and should be in the same network as the rest of the cluster).
 
 ![driver-sparkcontext-clustermanager-workers-executors](https://user-images.githubusercontent.com/1760859/31045087-8305dfa4-a5f5-11e7-8a7e-b0855b2114d7.png)
@@ -63,7 +63,7 @@ Spark applications are run as independent sets of processes, coordinated by a Sp
 ## Did I Hear SQL?
 Spark SQL Provides APIs for interacting with Spark via the Apache Hive variant of SQL called Hive Query Language (HiveQL). Every database table is represented as an RDD and Spark SQL queries are transformed into Spark operations. For those that are familiar with Hive and HiveQL, Spark can act as a drop-in replacement.
 
-## Passing (Secret) Data to Workers
+## Passing Data to Workers
 
 Operations can be invoked on a RDD by passing closure. When Spark runs a closure on a worker, any variables used in the closure are copied to that node, but are maintained within the local scope of that closure.
 
@@ -71,7 +71,7 @@ Spark provides two types of shared variables that can be interacted with by all 
 1. Broadcast variables are distributed to all workers, but are read-only. Broadcast variables can be used as lookup tables or stopword lists.
 2. Accumulators are variables that workers can "add" to using associative operations and are typically used as counters.
 
-## (Yet Another) DataFrame
+## Yet Another, DataFrame
 
 DataFrames are often compared to tables in a relational database or a data frame in R or Python: they have a schema, with column names and types and logic for rows and columns. Because of the disadvantages that you can experience while working with RDDs, the DataFrame API was conceived: it provides you with a higher level abstraction that allows you to use a query language to manipulate the data. This higher level abstraction is a logical plan that represents data and a schema. This means that the frontend to interacting with your data is a lot easier! Because the logical plan will be converted to a physical plan for execution, you’re actually a lot closer to what you’re doing when you’re working with them rather than how you’re trying to do it, because you let Spark figure out the most efficient way to do what you want to do. Remember though that **DataFrames are still built on top of RDDs. And exactly because you let Spark worry about the most efficient way to do things, DataFrames are optimized, and more intelligent decisions will be made when you’re transforming data** and that also explains why they are faster than RDDs.
 
@@ -83,7 +83,7 @@ df.toPandas()
 ```
 Note that you do need to make sure that the DataFrame needs to be small enough because all the data is loaded into the driver’s memory.
 
-## Recomputation and Persistence :|
+## Recomputation and Persistence
 
 RDDs by default is recomputed each time an action is run on them. For example;
 ```
@@ -109,7 +109,7 @@ A couple of use cases for caching or persisting RDDs are the use of iterative al
 
 You can use unpersist() to unpersist a RDD.
 
-## (Not so Useful) Tips
+## Tips
 1. Memory leaks can occur if you are careless in persisting, read more [here](https://github.com/ContentWise/sparking/wiki/What-if-you-%22.persist()%22-twice)
 
 2. By calling collect() on any RDD, you drag data back into your applications from the nodes. Each RDD element will be copy onto the single driver program, which will run out of memory and crash. Given the fact that you want to make use of Spark in the most efficient way possible, it’s not a good idea to call collect() on large RDDs.

@@ -10,7 +10,7 @@ Any distributed computing framework needs to solve two problems
 1. How to distribute data
 2. How to distribute computation
 
-Hadoop uses HDFS to solve the distributed data problem and MapReduce as the programming paradigm that provides effective distributed computation. Similarly, Spark has a functional programming API in multiple languages that provides more operators than map and reduce, and does this via a distributed data framework called resilient distributed datasets or RDDs(more on RDDs later). **Spark extends the MapReduce model to support more types of computations and it can cover a wide range of workflows that previously were implemented as specialized systems built on top of Hadoop**. Spark uses in-memory caching to improve performance and, therefore, is fast enough to allow for interactive analysis. Caching also improves the performance of iterative algorithms, which makes it great for data centric tasks, especially machine learning.
+Hadoop uses HDFS to solve the distributed data problem and MapReduce as the programming paradigm that provides effective distributed computation. Similarly, Spark has a functional programming API in multiple languages that provides more operators than map and reduce, and does this via a distributed data framework called resilient distributed datasets or RDDs (more on RDDs later). **Spark extends the MapReduce model to support more types of computations and it can cover a wide range of workflows that previously were implemented as specialized systems built on top of Hadoop**. Spark uses in-memory caching to improve performance and, therefore, is fast enough to allow for interactive analysis. Caching also improves the performance of iterative algorithms, which makes it great for data centric tasks, especially machine learning.
 
 
 ## What is RDD anyway?
@@ -60,7 +60,7 @@ Spark SQL Provides APIs for interacting with Spark via the Apache Hive variant o
 
 ## Passing (Secret) Data to Workers
 
-Operations can be invokved on a RDD by passing closure. When Spark runs a closure on a worker, any variables used in the closure are copied to that node, but are maintained within the local scope of that closure.
+Operations can be invoked on a RDD by passing closure. When Spark runs a closure on a worker, any variables used in the closure are copied to that node, but are maintained within the local scope of that closure.
 
 Spark provides two types of shared variables that can be interacted with by all workers in a restricted fashion.
 1. Broadcast variables are distributed to all workers, but are read-only. Broadcast variables can be used as lookup tables or stopword lists.
@@ -72,7 +72,7 @@ DataFrames are often compared to tables in a relational database or a data frame
 
 You can use RDDs when you want to perform low-level transformations and actions on your unstructured data. This means that you don’t care about imposing a schema while processing or accessing the attributes by name or column. In addition, you don’t necessarily need the optimization and performance benefits that DataFrames and DataSets(another high level abstraction on top of RDD) can offer for (semi) structured data.
 
-Note that, even though the Spark, Python and R data frames can be very similar, there are also a lot of differences. Spark DataFrames carry the specific optimalization under the hood and can use distributed memory to handle big data, while Pandas DataFrames and R data frames can only run on one computer. However, these differences don’t mean that the two of them can’t work together. You can reuse your existing Pandas DataFrames to scale up to larger data sets. If you want to convert your Spark DataFrame to a Pandas DataFrame and you expect the resulting Pandas’s DataFrame to be small, you can use the following lines of code:
+Note that, even though the Spark, Python and R data frames can be very similar, there are also a lot of differences. Spark DataFrames carry the specific optimization under the hood and can use distributed memory to handle big data, while Pandas DataFrames and R data frames can only run on one computer. However, these differences don’t mean that the two of them can’t work together. You can reuse your existing Pandas DataFrames to scale up to larger data sets. If you want to convert your Spark DataFrame to a Pandas DataFrame and you expect the resulting Pandas’s DataFrame to be small, you can use the following lines of code:
 ```
 df.toPandas() 
 ```
@@ -118,7 +118,7 @@ You can use unpersist() to unpersist a RDD.
 6. RDDs would be less suitable for applications that make asynchronous fine-grained updates to shared state, such as a storage system for a web application or an incremental web crawler. For these applications, it is more efficient to use systems that perform traditional update logging and data check-pointing, such as databases.
 
 ## Confession
-When I started learning Apache Spark I read material from various websites and took notes(read copy/paste) along the way. Recently, another team at my company started exploring Spark so I decided to share my notes with them (and the world). Here are some of the notes sources
+When I started learning Apache Spark I read material from various websites and took notes (read copy/paste) along the way. Recently, another team at my company started exploring Spark so I decided to share my notes with them (and the world). Here are some of the notes sources
 1. ![Paper on RDDs, University of California, Berkeley](https://www.usenix.org/system/files/conference/nsdi12/nsdi12-final138.pdf)
 2. ![Apache Spark Homepage](https://spark.apache.org/)
 2. ![Apache Spark in Python: Beginner's Guide, Data Camp](https://www.datacamp.com/community/tutorials/apache-spark-python#gs.iAyDe9M)
